@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Expense Tracker</title>
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #4a6ee0 0%, #8a63d2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* MAIN CONTENT LAYOUT */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        /* LEFT SIDE: FORM */
+        .form-section {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e0e5ff;
+        }
+
+        .form-section h2 {
+            color: #4a6ee0;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #e0e5ff;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-input {
+            padding: 12px 15px;
+            border: 2px solid #d0d5ff;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4a6ee0;
+            box-shadow: 0 0 0 3px rgba(74, 110, 224, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a6ee0 0%, #8a63d2 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 110, 224, 0.4);
+        }
+
+        .btn-update {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-update:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-edit {
+            background: #4a6ee0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+            margin-right: 5px;
+        }
+
+        .btn-edit:hover {
+            background: #3a5ed0;
+        }
+
+        /* RIGHT SIDE: TABLE */
+        .table-section {
+            background: white;
+        }
+
+        .table-section h2 {
+            color: #4a6ee0;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #e0e5ff;
+            padding-bottom: 10px;
+        }
+
+        /* FILTER SECTION */
+        .filter-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            border: 1px solid #e0e5ff;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-filter {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-filter:hover {
+            background: #138496;
+        }
+
+        .btn-clear {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-clear:hover {
+            background: #e0a800;
+        }
+
+        /* SUMMARY */
+        .summary {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            border: 1px solid #e0e5ff;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a6ee0;
+        }
+
+        /* TABLE STYLES */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e0e5ff;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #4a6ee0 0%, #8a63d2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e0e5ff;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8f9ff;
+        }
+
+        td {
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        .btn-delete {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+        }
+
+        /* STATISTICS SECTION */
+        .statistics-section {
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            border: 2px solid #e0e5ff;
+            margin-top: 30px;
+        }
+
+        .statistics-section h2 {
+            color: #4a6ee0;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #e0e5ff;
+            padding-bottom: 10px;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .chart-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stats-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-box h3, .stats-box h3 {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* BAR CHART STYLES - FIXED */
+        .bar-chart-container {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            align-items: flex-end;  /* Changed from flex-start to flex-end */
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            flex: 1;
+            max-width: 100px;
+            margin: 0 5px;
+            position: relative;
+        }
+
+        .bar {
+            width: 50px;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            margin-top: auto; /* This pushes bar to bottom */
+        }
+
+        .bar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;  /* Position above the bar */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .bar-label {
+            margin-top: 10px;
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+            font-weight: 600;
+            padding: 5px;
+            width: 100%;
+            word-wrap: break-word;
+        }
+
+        .bar-percentage {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        /* Add grid lines for better visualization */
+        .bar-chart-container::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        .bar-chart-container::after {
+            content: '';
+            position: absolute;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: rgba(221, 221, 221, 0.5);
+        }
+
+        /* AUTOCOMPLETE STYLES */
+        .autocomplete-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d0d5ff;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            max-height: 200px;
+            overflow-y: auto;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: white;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+        .autocomplete-item:hover {
+            background-color: #f8f9ff;
+        }
+
+        .autocomplete-active {
+            background-color: #4a6ee0 !important;
+            color: white;
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .stat-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* DATA MANAGEMENT */
+        .data-management {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e5ff;
+        }
+
+        .data-management h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .data-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-export {
+            background: #20c997;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-export:hover {
+            background: #1ba87e;
+        }
+
+        .btn-import {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-import:hover {
+            background: #138496;
+        }
+
+        .btn-clear-all {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-clear-all:hover {
+            background: #c82333;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9ff;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e5ff;
+        }
+
+        /* FLASH MESSAGE */
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2s forwards;
+            font-weight: 500;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary, .filter-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .summary-item {
+                align-items: flex-start;
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 10px;
+            }
+            
+            .main-content {
+                padding: 15px;
+                gap: 20px;
+            }
+            
+            .form-section, .table-section, .statistics-section {
+                padding: 20px;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 13px;
+            }
+            
+            .data-buttons {
+                flex-direction: column;
+            }
+            
+            .bar-chart-container {
+                flex-wrap: wrap;
+                height: auto;
+                justify-content: center;
+            }
+            
+            .bar-wrapper {
+                max-width: 80px;
+                margin: 10px;
+            }
+
+            .autocomplete-items {
+                max-height: 150px;
+            }
+        }
+
+        /* CATEGORY COLORS */
+        .category-food { color: #28a745; }
+        .category-transport { color: #17a2b8; }
+        .category-shopping { color: #ffc107; }
+        .category-entertainment { color: #e83e8c; }
+        .category-bills { color: #6f42c1; }
+        .category-healthcare { color: #dc3545; }
+        .category-education { color: #20c997; }
+        .category-other { color: #6c757d; }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Personal Expense Tracker</h1>
+            <p class="subtitle">Track your daily expenses easily</p>
+        </header>
+
+        <div class="main-content">
+            <!-- LEFT: ADD EXPENSE FORM -->
+            <div class="form-section">
+                <h2>Add New Expense</h2>
+                <div class="input-group">
+                    <input type="date" id="dateInput" class="form-input">
+                    <select id="categoryInput" class="form-input">
+                        <option value="">Select Category</option>
+                        <option value="Food">Food & Dining</option>
+                        <option value="Transport">Transportation</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Bills">Bills & Utilities</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Education">Education</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="number" id="amountInput" class="form-input" placeholder="Amount (PKR)" min="0" step="100">
+                    
+                    <!-- DESCRIPTION WITH AUTOCOMPLETE -->
+                    <div class="autocomplete-container">
+                        <input type="text" id="descInput" class="form-input" placeholder="Description" autocomplete="off">
+                        <div id="autocompleteList" class="autocomplete-items"></div>
+                    </div>
+                    
+                    <button id="addBtn" class="btn-primary">Add Expense</button>
+                    <button id="cancelBtn" class="btn-secondary" style="display: none;">Cancel Edit</button>
+                </div>
+
+                <!-- DATA MANAGEMENT -->
+                <div class="data-management">
+                    <h3>Data Management</h3>
+                    <div class="data-buttons">
+                        <button id="exportBtn" class="btn-export">Export Data (JSON)</button>
+                        <button id="importBtn" class="btn-import">Import Data</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                        <button id="clearAllBtn" class="btn-clear-all">Clear All Data</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: EXPENSES TABLE -->
+            <div class="table-section">
+                <h2>Your Expenses</h2>
+                
+                <!-- FILTER SECTION -->
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <span class="filter-label">Filter by Category:</span>
+                        <select id="filterCategory" class="form-input" style="flex: 1;">
+                            <option value="all">All Categories</option>
+                            <option value="Food">Food & Dining</option>
+                            <option value="Transport">Transportation</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Bills">Bills & Utilities</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Education">Education</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="filter-actions">
+                            <button id="filterBtn" class="btn-filter">Apply Filter</button>
+                            <button id="clearFilterBtn" class="btn-clear">Clear Filter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUMMARY -->
+                <div class="summary">
+                    <div class="summary-item">
+                        <span class="label">Total Expenses</span>
+                        <span class="value" id="totalAmount">0.00 PKR</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Number of Expenses</span>
+                        <span class="value" id="expenseCount">0</span>
+                    </div>
+                </div>
+
+                <!-- EXPENSES TABLE -->
+                <div class="table-container">
+                    <table id="expenseTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseBody">
+                            <!-- Expenses will appear here -->
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <p>No expenses yet. Add your first expense above!</p>
+                    </div>
+                </div>
+
+                <!-- STATISTICS SECTION -->
+                <div class="statistics-section">
+                    <h2>📊 Expense Statistics</h2>
+                    
+                    <div class="charts-container">
+                        <div class="chart-box">
+                            <h3>Expenses by Category</h3>
+                            <div class="bar-chart-container" id="categoryChart">
+                                <!-- Bars will be drawn here by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="stats-box">
+                            <h3>Summary</h3>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-label">Average Expense:</span>
+                                    <span class="stat-value" id="averageExpense">0.00 PKR</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Highest Expense:</span>
+                                    <span class="stat-value" id="highestExpense">0.00 PKR</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Most Used Category:</span>
+                                    <span class="stat-value" id="mostUsedCategory">None</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">This Month's Total:</span>
+                                    <span class="stat-value" id="monthlyTotal">0.00 PKR</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 Fahad's Expense Tracker. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // ========== JAVASCRIPT CODE ==========
+        
+        console.log("✅ Expense Tracker loaded successfully!");
+        
+        // Array to store expenses
+        let expenses = [];
+        
+        // Store the ID of expense being edited
+        let editingExpenseId = null;
+        
+        // Store current filter
+        let currentFilter = 'all';
+        
+        // Store all unique descriptions for autocomplete
+        let allDescriptions = new Set();
+        
+        // Autocomplete variables
+        let currentFocus = -1;
+        let autocompleteItems = [];
+        
+        // Get all HTML elements
+        const dateInput = document.getElementById('dateInput');
+        const categoryInput = document.getElementById('categoryInput');
+        const amountInput = document.getElementById('amountInput');
+        const descInput = document.getElementById('descInput');
+        const addBtn = document.getElementById('addBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const expenseBody = document.getElementById('expenseBody');
+        const totalAmountElement = document.getElementById('totalAmount');
+        const expenseCountElement = document.getElementById('expenseCount');
+        const emptyState = document.getElementById('emptyState');
+        const filterCategory = document.getElementById('filterCategory');
+        const filterBtn = document.getElementById('filterBtn');
+        const clearFilterBtn = document.getElementById('clearFilterBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const importFile = document.getElementById('importFile');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const autocompleteList = document.getElementById('autocompleteList');
+        
+        // Set today's date as default
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+            loadFromLocalStorage();
+            updateDescriptionsList();
+            console.log("Today's date set:", today);
+        };
+        
+        // ========== AUTOCOMPLETE FUNCTIONS ==========
+        
+        // Update descriptions list from expenses
+        function updateDescriptionsList() {
+            allDescriptions.clear();
+            
+            // Add all descriptions from expenses
+            expenses.forEach(expense => {
+                if (expense.description && expense.description.trim() !== '') {
+                    allDescriptions.add(expense.description);
+                }
+            });
+            
+            // Also load from localStorage
+            loadDescriptionsFromStorage();
+            
+            console.log("Updated descriptions list:", Array.from(allDescriptions));
+        }
+        
+        // Save descriptions to localStorage
+        function saveDescriptionsToStorage() {
+            try {
+                localStorage.setItem('expenseTrackerDescriptions', 
+                    JSON.stringify(Array.from(allDescriptions)));
+            } catch (error) {
+                console.error("Error saving descriptions:", error);
+            }
+        }
+        
+        // Load descriptions from localStorage
+        function loadDescriptionsFromStorage() {
+            try {
+                const saved = localStorage.getItem('expenseTrackerDescriptions');
+                if (saved) {
+                    const loaded = JSON.parse(saved);
+                    loaded.forEach(desc => allDescriptions.add(desc));
+                }
+            } catch (error) {
+                console.error("Error loading descriptions:", error);
+            }
+        }
+        
+        // Show autocomplete suggestions
+        function showAutocompleteSuggestions() {
+            const val = descInput.value.trim();
+            
+            // Close any existing autocomplete list
+            closeAutocompleteList();
+            
+            if (!val || val.length < 1) {
+                return false;
+            }
+            
+            // Filter descriptions that contain the typed text
+            const filtered = Array.from(allDescriptions)
+                .filter(desc => desc.toLowerCase().includes(val.toLowerCase()))
+                .sort();
+            
+            if (filtered.length === 0) {
+                return false;
+            }
+            
+            // Create list items
+            autocompleteItems = [];
+            autocompleteList.innerHTML = '';
+            autocompleteList.style.display = 'block';
+            
+            filtered.forEach(desc => {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.innerHTML = `<strong>${desc.substring(0, val.length)}</strong>${desc.substring(val.length)}`;
+                item.innerHTML += `<input type='hidden' value='${desc}'>`;
+                
+                item.addEventListener('click', function() {
+                    descInput.value = this.getElementsByTagName('input')[0].value;
+                    closeAutocompleteList();
+                });
+                
+                autocompleteList.appendChild(item);
+                autocompleteItems.push(item);
+            });
+            
+            currentFocus = -1;
+            return true;
+        }
+        
+        // Close autocomplete list
+        function closeAutocompleteList() {
+            autocompleteList.innerHTML = '';
+            autocompleteList.style.display = 'none';
+            autocompleteItems = [];
+            currentFocus = -1;
+        }
+        
+        // Keyboard navigation for autocomplete
+        function navigateAutocomplete(e) {
+            if (!autocompleteItems.length) return;
+            
+            if (e.keyCode == 40) { // DOWN arrow
+                currentFocus++;
+                addActive(autocompleteItems);
+            } else if (e.keyCode == 38) { // UP arrow
+                currentFocus--;
+                addActive(autocompleteItems);
+            } else if (e.keyCode == 13) { // ENTER
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    if (autocompleteItems[currentFocus]) {
+                        descInput.value = autocompleteItems[currentFocus].getElementsByTagName('input')[0].value;
+                        closeAutocompleteList();
+                    }
+                }
+            } else if (e.keyCode == 27) { // ESC
+                closeAutocompleteList();
+            }
+        }
+        
+        // Add active class to autocomplete item
+        function addActive(items) {
+            if (!items) return false;
+            removeActive(items);
+            
+            if (currentFocus >= items.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (items.length - 1);
+            
+            items[currentFocus].classList.add('autocomplete-active');
+            
+            // Scroll into view if needed
+            items[currentFocus].scrollIntoView({ block: 'nearest' });
+        }
+        
+        // Remove active class from all items
+        function removeActive(items) {
+            for (let i = 0; i < items.length; i++) {
+                items[i].classList.remove('autocomplete-active');
+            }
+        }
+        
+        // ========== EVENT LISTENERS ==========
+        
+        // Add/Update expense when button clicked
+        addBtn.addEventListener('click', function() {
+            if (editingExpenseId) {
+                updateExpense(editingExpenseId);
+            } else {
+                addExpense();
+            }
+        });
+        
+        // Add/Update expense when Enter is pressed in ANY form field
+        function handleEnterKey(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent form submission behavior
+                if (editingExpenseId) {
+                    updateExpense(editingExpenseId);
+                } else {
+                    addExpense();
+                }
+            }
+        }
+        
+        // Attach Enter key listener to all form inputs
+        dateInput.addEventListener('keypress', handleEnterKey);
+        categoryInput.addEventListener('keypress', handleEnterKey);
+        amountInput.addEventListener('keypress', handleEnterKey);
+        descInput.addEventListener('keypress', handleEnterKey);
+        
+        // Description input events for autocomplete
+        descInput.addEventListener('input', showAutocompleteSuggestions);
+        descInput.addEventListener('keydown', navigateAutocomplete);
+        
+        // Close autocomplete when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target != descInput && e.target != autocompleteList) {
+                closeAutocompleteList();
+            }
+        });
+        
+        // Cancel edit mode
+        cancelBtn.addEventListener('click', cancelEdit);
+        
+        // Filter expenses
+        filterBtn.addEventListener('click', function() {
+            currentFilter = filterCategory.value;
+            updateTable();
+        });
+        
+        // Clear filter
+        clearFilterBtn.addEventListener('click', function() {
+            filterCategory.value = 'all';
+            currentFilter = 'all';
+            updateTable();
+        });
+        
+        // Export data
+        exportBtn.addEventListener('click', exportData);
+        
+        // Import data
+        importBtn.addEventListener('click', function() {
+            importFile.click();
+        });
+        
+        importFile.addEventListener('change', handleFileImport);
+        
+        // Clear all data
+        clearAllBtn.addEventListener('click', clearAllData);
+        
+        // ========== CORE FUNCTIONS ==========
+        
+        // Show flash message instead of alert
+        function showFlashMessage(message, type = 'success') {
+            const flash = document.createElement('div');
+            flash.className = 'flash-message';
+            flash.textContent = message;
+            flash.style.background = type === 'success' ? '#28a745' : 
+                                   type === 'error' ? '#dc3545' : 
+                                   type === 'warning' ? '#ffc107' : '#17a2b8';
+            
+            document.body.appendChild(flash);
+            
+            // Remove the message after animation
+            setTimeout(() => {
+                if (flash.parentNode) {
+                    flash.parentNode.removeChild(flash);
+                }
+            }, 2300);
+        }
+        
+        // Add a new expense
+        function addExpense() {
+            console.log("Add expense clicked");
+            
+            // Get values from form
+            const date = dateInput.value;
+            const category = categoryInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+            const description = descInput.value.trim();
+            
+            // VALIDATION
+            if (!date) {
+                showFlashMessage("📅 Please select a date", 'error');
+                dateInput.focus();
+                return;
+            }
+            
+            if (!category) {
+                showFlashMessage("🏷️ Please select a category", 'error');
+                categoryInput.focus();
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                showFlashMessage("💰 Please enter a valid amount (greater than 0)", 'error');
+                amountInput.focus();
+                return;
+            }
+            
+            if (!description) {
+                showFlashMessage("📝 Please enter a description", 'error');
+                descInput.focus();
+                return;
+            }
+            
+            // Create expense object
+            const expense = {
+                id: Date.now(), // Unique ID based on timestamp
+                date: date,
+                category: category,
+                amount: amount,
+                description: description
+            };
+            
+            // Add to array
+            expenses.push(expense);
+            
+            // Add description to autocomplete list
+            allDescriptions.add(description);
+            saveDescriptionsToStorage();
+            
+            // Update table and save
+            updateTable();
+            saveToLocalStorage();
+            
+            // Clear form
+            clearForm();
+            
+            // Show success message
+            showFlashMessage("✅ Expense added successfully!");
+            
+            // Focus back to category input
+            categoryInput.focus();
+        }
+        
+        // Edit an expense
+        function editExpense(id) {
+            console.log("Edit expense with ID:", id);
+            
+            // Find the expense to edit
+            const expenseToEdit = expenses.find(expense => expense.id === id);
+            
+            if (!expenseToEdit) {
+                showFlashMessage("Expense not found!", 'error');
+                return;
+            }
+            
+            // Fill the form with expense data
+            dateInput.value = expenseToEdit.date;
+            categoryInput.value = expenseToEdit.category;
+            amountInput.value = expenseToEdit.amount;
+            descInput.value = expenseToEdit.description;
+            
+            // Change button to "Update Expense"
+            addBtn.textContent = "Update Expense";
+            addBtn.className = "btn-update";
+            
+            // Show cancel button
+            cancelBtn.style.display = 'block';
+            
+            // Store the ID we're editing
+            editingExpenseId = id;
+            
+            // Scroll to form and focus on amount field
+            amountInput.focus();
+            showFlashMessage("✏️ Editing expense...", 'warning');
+        }
+        
+        // Update an existing expense
+        function updateExpense(id) {
+            console.log("Updating expense with ID:", id);
+            
+            // Get updated values from form
+            const date = dateInput.value;
+            const category = categoryInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+            const description = descInput.value.trim();
+            
+            // VALIDATION
+            if (!date) {
+                showFlashMessage("📅 Please select a date", 'error');
+                dateInput.focus();
+                return;
+            }
+            
+            if (!category) {
+                showFlashMessage("🏷️ Please select a category", 'error');
+                categoryInput.focus();
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                showFlashMessage("💰 Please enter a valid amount (greater than 0)", 'error');
+                amountInput.focus();
+                return;
+            }
+            
+            if (!description) {
+                showFlashMessage("📝 Please enter a description", 'error');
+                descInput.focus();
+                return;
+            }
+            
+            // Find the expense index
+            const expenseIndex = expenses.findIndex(expense => expense.id === id);
+            
+            if (expenseIndex === -1) {
+                showFlashMessage("Expense not found!", 'error');
+                resetForm();
+                return;
+            }
+            
+            // Update the expense at the found index
+            expenses[expenseIndex] = {
+                id: id, // Keep the same ID
+                date: date,
+                category: category,
+                amount: amount,
+                description: description
+            };
+            
+            // Update description in autocomplete list
+            allDescriptions.add(description);
+            saveDescriptionsToStorage();
+            
+            // Update table and save
+            updateTable();
+            saveToLocalStorage();
+            
+            // Reset form
+            resetForm();
+            
+            // Show success message (flash message instead of alert)
+            showFlashMessage("✅ Expense updated successfully!");
+        }
+        
+        // Delete an expense
+        function deleteExpense(id) {
+            console.log("Delete expense with ID:", id);
+            
+            if (confirm("Are you sure you want to delete this expense?")) {
+                // Remove expense from array
+                expenses = expenses.filter(expense => expense.id !== id);
+                
+                // If we're deleting the expense being edited, reset form
+                if (editingExpenseId === id) {
+                    resetForm();
+                }
+                
+                // Update descriptions list (in case description is no longer used)
+                updateDescriptionsList();
+                saveDescriptionsToStorage();
+                
+                // Update table and save
+                updateTable();
+                saveToLocalStorage();
+                
+                showFlashMessage("🗑️ Expense deleted successfully!");
+            }
+        }
+        
+        // Update the expenses table
+        function updateTable() {
+            console.log("Updating table...");
+            
+            // Clear table
+            expenseBody.innerHTML = '';
+            
+            // Filter expenses if needed
+            let filteredExpenses = expenses;
+            if (currentFilter !== 'all') {
+                filteredExpenses = expenses.filter(expense => expense.category === currentFilter);
+            }
+            
+            // If no expenses, show empty state
+            if (filteredExpenses.length === 0) {
+                emptyState.style.display = 'block';
+                totalAmountElement.textContent = '0.00 PKR';
+                expenseCountElement.textContent = '0';
+                updateStatistics();
+                return;
+            } else {
+                emptyState.style.display = 'none';
+            }
+            
+            let total = 0;
+            
+            // Sort expenses by date (newest first)
+            filteredExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Add each expense as a table row
+            filteredExpenses.forEach(expense => {
+                const row = document.createElement('tr');
+                
+                // Add category-specific class for coloring
+                const categoryClass = `category-${expense.category.toLowerCase()}`;
+
+                // Create row HTML with Edit and Delete buttons
+                row.innerHTML = `
+                    <td>${formatDate(expense.date)}</td>
+                    <td class="${categoryClass}">${expense.category}</td>
+                    <td><strong>${expense.amount.toFixed(2)} PKR</strong></td>
+                    <td>${expense.description}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editExpense(${expense.id})">Edit</button>
+                        <button class="btn-delete" onclick="deleteExpense(${expense.id})">Delete</button>
+                    </td>
+                `;
+                
+                // Add row to table
+                expenseBody.appendChild(row);
+                
+                // Add to total
+                total += expense.amount;
+            });
+            
+            // Update summary
+            totalAmountElement.textContent = `${total.toFixed(2)} PKR`;
+            expenseCountElement.textContent = filteredExpenses.length;
+            
+            // Update statistics
+            updateStatistics();
+        }
+        
+        // Get category color for chart
+        function getCategoryColor(category) {
+            const colors = {
+                'Food': 'linear-gradient(to top, #28a745, #20c997)',
+                'Transport': 'linear-gradient(to top, #17a2b8, #0dcaf0)',
+                'Shopping': 'linear-gradient(to top, #ffc107, #ffca2c)',
+                'Entertainment': 'linear-gradient(to top, #e83e8c, #d63384)',
+                'Bills': 'linear-gradient(to top, #6f42c1, #6610f2)',
+                'Healthcare': 'linear-gradient(to top, #dc3545, #bb2d3b)',
+                'Education': 'linear-gradient(to top, #20c997, #198754)',
+                'Other': 'linear-gradient(to top, #6c757d, #5a6268)'
+            };
+            
+            return colors[category] || 'linear-gradient(to top, #667eea, #764ba2)';
+        }
+        
+        // Update statistics and chart - FIXED VERSION
+        function updateStatistics() {
+            if (expenses.length === 0) {
+                // Clear statistics if no expenses
+                document.getElementById('categoryChart').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No data to display. Add expenses to see the chart.</p>';
+                document.getElementById('averageExpense').textContent = '0.00 PKR';
+                document.getElementById('highestExpense').textContent = '0.00 PKR';
+                document.getElementById('mostUsedCategory').textContent = 'None';
+                document.getElementById('monthlyTotal').textContent = '0.00 PKR';
+                return;
+            }
+            
+            // Calculate category totals
+            const categoryTotals = {};
+            expenses.forEach(expense => {
+                categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + expense.amount;
+            });
+            
+            // Calculate statistics
+            const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const average = total / expenses.length;
+            const highest = Math.max(...expenses.map(e => e.amount));
+            
+            // Find most used category
+            const categoryCounts = {};
+            expenses.forEach(expense => {
+                categoryCounts[expense.category] = (categoryCounts[expense.category] || 0) + 1;
+            });
+            const mostUsedCategory = Object.keys(categoryCounts).reduce((a, b) => 
+                categoryCounts[a] > categoryCounts[b] ? a : b
+            );
+            
+            // Calculate this month's total
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            const monthlyTotal = expenses.reduce((sum, expense) => {
+                const expenseDate = new Date(expense.date);
+                if (expenseDate.getMonth() === currentMonth && 
+                    expenseDate.getFullYear() === currentYear) {
+                    return sum + expense.amount;
+                }
+                return sum;
+            }, 0);
+            
+            // Update statistics display
+            document.getElementById('averageExpense').textContent = `${average.toFixed(2)} PKR`;
+            document.getElementById('highestExpense').textContent = `${highest.toFixed(2)} PKR`;
+            document.getElementById('mostUsedCategory').textContent = mostUsedCategory;
+            document.getElementById('monthlyTotal').textContent = `${monthlyTotal.toFixed(2)} PKR`;
+            
+            // ========== CREATE BAR CHART ==========
+            const categoryChart = document.getElementById('categoryChart');
+            categoryChart.innerHTML = ''; // Clear existing
+            
+            // Get the maximum amount for scaling
+            const maxAmount = Math.max(...Object.values(categoryTotals));
+            
+            // Define chart height
+            const chartHeight = 200; // Height in pixels
+            
+            // Sort categories by amount (largest first)
+            const sortedCategories = Object.entries(categoryTotals)
+                .sort((a, b) => b[1] - a[1]); // Sort descending by amount
+            
+            // Calculate total for percentage
+            const totalAllCategories = sortedCategories.reduce((sum, [_, amount]) => sum + amount, 0);
+            
+            // Create bars for each category
+            sortedCategories.forEach(([category, amount]) => {
+                // Calculate bar height (scaled to chart height)
+                const barHeight = maxAmount > 0 ? (amount / maxAmount) * chartHeight : 0;
+                const percentage = ((amount / totalAllCategories) * 100).toFixed(1);
+                
+                // Create bar wrapper
+                const barWrapper = document.createElement('div');
+                barWrapper.className = 'bar-wrapper';
+                
+                // Create the actual bar
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${barHeight}px`;
+                bar.style.background = getCategoryColor(category);
+                bar.title = `${category}: ${amount.toFixed(2)} PKR (${percentage}%)`;
+                
+                // Add hover effect
+                bar.onmouseover = function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                };
+                bar.onmouseout = function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = 'none';
+                };
+                
+                // Create value label (above bar)
+                const valueLabel = document.createElement('div');
+                valueLabel.className = 'bar-value';
+                valueLabel.textContent = `${amount.toFixed(0)} PKR`;
+                valueLabel.title = `${category}: ${amount.toFixed(2)} PKR`;
+                
+                // Create category label (below bar)
+                const categoryLabel = document.createElement('div');
+                categoryLabel.className = 'bar-label';
+                categoryLabel.textContent = category;
+                
+                // Create percentage label
+                const percentageLabel = document.createElement('div');
+                percentageLabel.className = 'bar-percentage';
+                percentageLabel.textContent = `${percentage}%`;
+                
+                // Assemble the bar
+                barWrapper.appendChild(valueLabel);
+                barWrapper.appendChild(bar);
+                barWrapper.appendChild(categoryLabel);
+                barWrapper.appendChild(percentageLabel);
+                
+                // Add to chart
+                categoryChart.appendChild(barWrapper);
+            });
+            
+            // If chart is still empty, show message
+            if (categoryChart.children.length === 0) {
+                categoryChart.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Add some expenses to see the chart!</p>';
+            }
+        }
+        
+        // Cancel edit mode
+        function cancelEdit() {
+            console.log("Canceling edit mode");
+            resetForm();
+            showFlashMessage("Edit canceled", 'warning');
+        }
+        
+        // Reset form to "Add Expense" mode
+        function resetForm() {
+            // Clear editing ID
+            editingExpenseId = null;
+            
+            // Reset button to "Add Expense"
+            addBtn.textContent = "Add Expense";
+            addBtn.className = "btn-primary";
+            
+            // Hide cancel button
+            cancelBtn.style.display = 'none';
+            
+            // Clear form
+            clearForm();
+        }
+
+        // Clear the form
+        function clearForm() {
+            // Set today's date
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+            
+            // Clear other fields
+            categoryInput.value = '';
+            amountInput.value = '';
+            descInput.value = '';
+            
+            // Close autocomplete
+            closeAutocompleteList();
+        }
+        
+        // Format date nicely
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        // ========== DATA MANAGEMENT FUNCTIONS ==========
+        
+        // Export data as JSON
+        function exportData() {
+            const dataStr = JSON.stringify(expenses, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `expense-data-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showFlashMessage("📤 Data exported successfully!");
+        }
+        
+        // Handle file import
+        function handleFileImport(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+                        if (confirm(`Import ${importedData.length} expenses? This will replace current data.`)) {
+                            expenses = importedData;
+                            updateDescriptionsList();
+                            updateTable();
+                            saveToLocalStorage();
+                            saveDescriptionsToStorage();
+                            showFlashMessage("📥 Data imported successfully!");
+                        }
+                    } catch (error) {
+                        showFlashMessage("❌ Invalid JSON file", 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+            // Reset file input
+            importFile.value = '';
+        }
+        
+        // Clear all data
+        function clearAllData() {
+            if (confirm("⚠️ Are you sure you want to clear ALL expenses? This cannot be undone.")) {
+                expenses = [];
+                allDescriptions.clear();
+                updateTable();
+                saveToLocalStorage();
+                saveDescriptionsToStorage();
+                showFlashMessage("🧹 All data cleared!");
+            }
+        }
+        
+        // ========== LOCALSTORAGE FUNCTIONS ==========
+        
+        // Save expenses to browser's localStorage
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('expenseTrackerData', JSON.stringify(expenses));
+                console.log("✅ Saved to localStorage:", expenses.length, "expenses");
+            } catch (error) {
+                console.error("❌ Error saving to localStorage:", error);
+                showFlashMessage("Error saving data", 'error');
+            }
+        }
+        
+        // Load expenses from browser's localStorage
+        function loadFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem('expenseTrackerData');
+                if (savedData) {
+                    expenses = JSON.parse(savedData);
+                    updateTable();
+                    console.log("✅ Loaded from localStorage:", expenses.length, "expenses");
+                } else {
+                    console.log("ℹ️ No saved data found in localStorage");
+                }
+            } catch (error) {
+                console.error("❌ Error loading from localStorage:", error);
+                expenses = []; // Reset to empty array on error
+                showFlashMessage("Error loading saved data", 'error');
+            }
+        }
+        
+        // ========== MAKE FUNCTIONS AVAILABLE GLOBALLY ==========
+        window.deleteExpense = deleteExpense;
+        window.editExpense = editExpense;
+        window.addExpense = addExpense;
+        window.clearForm = clearForm;
+        window.resetForm = resetForm;
+        window.cancelEdit = cancelEdit;
+        
+        // ========== INITIAL DEBUG INFO ==========
+        console.log("🎯 Expense Tracker ready!");
+        console.log("✅ Autocomplete feature enabled - remembers ALL descriptions!");
+    </script>
+</body>
+</html>
