@@ -12,26 +12,136 @@
             box-sizing: border-box;
         }
 
+        :root {
+            /* LIGHT THEME VARIABLES (DEFAULT) */
+            --primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --header-bg: linear-gradient(135deg, #4a6ee0 0%, #8a63d2 100%);
+            --container-bg: white;
+            --text-color: #333;
+            --form-bg: #f8f9ff;
+            --border-color: #e0e5ff;
+            --input-border: #d0d5ff;
+            --table-header: linear-gradient(135deg, #4a6ee0 0%, #8a63d2 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --summary-bg: #f8f9ff;
+            --stats-bg: #f8f9fa;
+            --footer-bg: #f8f9ff;
+        }
+
+        body.dark-mode {
+            /* DARK THEME VARIABLES */
+            --primary-bg: linear-gradient(135deg, #121212 0%, #2d2b52 100%);
+            --header-bg: linear-gradient(135deg, #2d2b52 0%, #4a3f8c 100%);
+            --container-bg: #1e1e2e;
+            --text-color: #e0e0e0;
+            --form-bg: #2a2a3e;
+            --border-color: #3a3a5e;
+            --input-border: #4a4a6e;
+            --table-header: linear-gradient(135deg, #2d2b52 0%, #4a3f8c 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            --summary-bg: #2a2a3e;
+            --stats-bg: #2a2a3e;
+            --footer-bg: #2a2a3e;
+        }
+
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-bg);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
+            background: var(--container-bg);
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow);
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* THEME TOGGLE */
+        .theme-toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 15px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .theme-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .theme-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #4a6ee0 0%, #8a63d2 100%);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .theme-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle input:checked + .theme-slider {
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+        }
+
+        .theme-toggle input:checked + .theme-slider:before {
+            transform: translateX(30px);
+            background-color: #333;
+        }
+
+        .theme-icon {
+            font-size: 18px;
+            margin: 0 5px;
         }
 
         /* HEADER */
         header {
-            background: linear-gradient(135deg, #4a6ee0 0%, #8a63d2 100%);
+            background: var(--header-bg);
             color: white;
             padding: 30px;
             text-align: center;
@@ -59,18 +169,22 @@
 
         /* LEFT SIDE: FORM */
         .form-section {
-            background: #f8f9ff;
+            background: var(--form-bg);
             padding: 25px;
             border-radius: 12px;
-            border: 2px solid #e0e5ff;
+            border: 2px solid var(--border-color);
         }
 
         .form-section h2 {
             color: #4a6ee0;
             margin-bottom: 20px;
             font-size: 1.3rem;
-            border-bottom: 2px solid #e0e5ff;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
+        }
+
+        body.dark-mode .form-section h2 {
+            color: #8a63d2;
         }
 
         .input-group {
@@ -81,17 +195,27 @@
 
         .form-input {
             padding: 12px 15px;
-            border: 2px solid #d0d5ff;
+            border: 2px solid var(--input-border);
             border-radius: 8px;
             font-size: 15px;
             transition: all 0.3s;
-            background: white;
+            background: var(--container-bg);
+            color: var(--text-color);
         }
 
         .form-input:focus {
             outline: none;
             border-color: #4a6ee0;
             box-shadow: 0 0 0 3px rgba(74, 110, 224, 0.2);
+        }
+
+        body.dark-mode .form-input:focus {
+            border-color: #8a63d2;
+            box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.3);
+        }
+
+        select.form-input {
+            color: var(--text-color);
         }
 
         .btn-primary {
@@ -167,24 +291,28 @@
 
         /* RIGHT SIDE: TABLE */
         .table-section {
-            background: white;
+            background: var(--container-bg);
         }
 
         .table-section h2 {
             color: #4a6ee0;
             margin-bottom: 20px;
             font-size: 1.3rem;
-            border-bottom: 2px solid #e0e5ff;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
+        }
+
+        body.dark-mode .table-section h2 {
+            color: #8a63d2;
         }
 
         /* FILTER SECTION */
         .filter-section {
             margin-bottom: 20px;
             padding: 15px;
-            background: #f8f9ff;
+            background: var(--form-bg);
             border-radius: 10px;
-            border: 1px solid #e0e5ff;
+            border: 1px solid var(--border-color);
         }
 
         .filter-group {
@@ -196,8 +324,9 @@
 
         .filter-label {
             font-size: 14px;
-            color: #666;
+            color: var(--text-color);
             font-weight: 600;
+            opacity: 0.8;
         }
 
         .filter-actions {
@@ -239,9 +368,9 @@
             gap: 30px;
             margin-bottom: 25px;
             padding: 15px;
-            background: #f8f9ff;
+            background: var(--summary-bg);
             border-radius: 10px;
-            border: 1px solid #e0e5ff;
+            border: 1px solid var(--border-color);
         }
 
         .summary-item {
@@ -253,8 +382,9 @@
 
         .label {
             font-size: 14px;
-            color: #666;
+            color: var(--text-color);
             margin-bottom: 5px;
+            opacity: 0.8;
         }
 
         .value {
@@ -263,11 +393,15 @@
             color: #4a6ee0;
         }
 
+        body.dark-mode .value {
+            color: #8a63d2;
+        }
+
         /* TABLE STYLES */
         .table-container {
             overflow-x: auto;
             border-radius: 8px;
-            border: 1px solid #e0e5ff;
+            border: 1px solid var(--border-color);
             margin-bottom: 30px;
         }
 
@@ -277,7 +411,7 @@
         }
 
         thead {
-            background: linear-gradient(135deg, #4a6ee0 0%, #8a63d2 100%);
+            background: var(--table-header);
             color: white;
         }
 
@@ -290,17 +424,18 @@
         }
 
         tbody tr {
-            border-bottom: 1px solid #e0e5ff;
+            border-bottom: 1px solid var(--border-color);
             transition: background 0.2s;
         }
 
         tbody tr:hover {
-            background: #f8f9ff;
+            background: var(--form-bg);
         }
 
         td {
             padding: 15px;
             font-size: 14px;
+            color: var(--text-color);
         }
 
         .btn-delete {
@@ -321,9 +456,9 @@
         /* STATISTICS SECTION */
         .statistics-section {
             padding: 20px;
-            background: #f8f9ff;
+            background: var(--form-bg);
             border-radius: 12px;
-            border: 2px solid #e0e5ff;
+            border: 2px solid var(--border-color);
             margin-top: 30px;
         }
 
@@ -331,8 +466,12 @@
             color: #4a6ee0;
             margin-bottom: 20px;
             font-size: 1.3rem;
-            border-bottom: 2px solid #e0e5ff;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
+        }
+
+        body.dark-mode .statistics-section h2 {
+            color: #8a63d2;
         }
 
         .charts-container {
@@ -342,34 +481,34 @@
         }
 
         .chart-box {
-            background: white;
+            background: var(--container-bg);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--card-shadow);
         }
 
         .stats-box {
-            background: white;
+            background: var(--container-bg);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--card-shadow);
         }
 
         .chart-box h3, .stats-box h3 {
-            color: #555;
+            color: var(--text-color);
             margin-bottom: 20px;
             font-size: 1.1rem;
         }
 
-        /* BAR CHART STYLES - FIXED */
+        /* BAR CHART STYLES */
         .bar-chart-container {
             width: 100%;
             height: 300px;
             display: flex;
-            align-items: flex-end;  /* Changed from flex-start to flex-end */
+            align-items: flex-end;
             justify-content: space-between;
             padding: 20px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
             position: relative;
         }
 
@@ -390,7 +529,7 @@
             transition: all 0.3s ease;
             position: relative;
             cursor: pointer;
-            margin-top: auto; /* This pushes bar to bottom */
+            margin-top: auto;
         }
 
         .bar:hover {
@@ -400,13 +539,13 @@
 
         .bar-value {
             position: absolute;
-            top: -25px;  /* Position above the bar */
+            top: -25px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 12px;
             font-weight: bold;
-            color: #333;
-            background: white;
+            color: var(--text-color);
+            background: var(--container-bg);
             padding: 2px 6px;
             border-radius: 3px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -418,7 +557,7 @@
             margin-top: 10px;
             font-size: 12px;
             text-align: center;
-            color: #666;
+            color: var(--text-color);
             font-weight: 600;
             padding: 5px;
             width: 100%;
@@ -427,30 +566,10 @@
 
         .bar-percentage {
             font-size: 11px;
-            color: #888;
+            color: var(--text-color);
+            opacity: 0.7;
             margin-top: 5px;
             text-align: center;
-        }
-
-        /* Add grid lines for better visualization */
-        .bar-chart-container::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background-color: #ddd;
-        }
-
-        .bar-chart-container::after {
-            content: '';
-            position: absolute;
-            bottom: 100px;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background-color: rgba(221, 221, 221, 0.5);
         }
 
         /* AUTOCOMPLETE STYLES */
@@ -461,38 +580,42 @@
 
         .autocomplete-items {
             position: absolute;
-            border: 1px solid #d0d5ff;
+            border: 1px solid var(--input-border);
             border-bottom: none;
             border-top: none;
             z-index: 99;
             top: 100%;
             left: 0;
             right: 0;
-            background: white;
+            background: var(--container-bg);
             max-height: 200px;
             overflow-y: auto;
             border-radius: 0 0 8px 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: var(--card-shadow);
             display: none;
         }
 
         .autocomplete-item {
             padding: 10px 15px;
             cursor: pointer;
-            background-color: white;
-            border-bottom: 1px solid #f0f0f0;
+            background-color: var(--container-bg);
+            border-bottom: 1px solid var(--border-color);
             font-size: 14px;
-            color: #333;
+            color: var(--text-color);
             transition: background 0.2s;
         }
 
         .autocomplete-item:hover {
-            background-color: #f8f9ff;
+            background-color: var(--form-bg);
         }
 
         .autocomplete-active {
             background-color: #4a6ee0 !important;
-            color: white;
+            color: white !important;
+        }
+
+        body.dark-mode .autocomplete-active {
+            background-color: #8a63d2 !important;
         }
 
         /* STATS GRID */
@@ -504,15 +627,20 @@
 
         .stat-item {
             padding: 15px;
-            background: #f8f9fa;
+            background: var(--stats-bg);
             border-radius: 8px;
             border-left: 4px solid #667eea;
+        }
+
+        body.dark-mode .stat-item {
+            border-left: 4px solid #8a63d2;
         }
 
         .stat-label {
             display: block;
             font-size: 14px;
-            color: #666;
+            color: var(--text-color);
+            opacity: 0.8;
             margin-bottom: 5px;
         }
 
@@ -520,18 +648,18 @@
             display: block;
             font-size: 18px;
             font-weight: bold;
-            color: #333;
+            color: var(--text-color);
         }
 
         /* DATA MANAGEMENT */
         .data-management {
             margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid #e0e5ff;
+            border-top: 1px solid var(--border-color);
         }
 
         .data-management h3 {
-            color: #555;
+            color: var(--text-color);
             margin-bottom: 15px;
             font-size: 1.1rem;
         }
@@ -584,14 +712,29 @@
             background: #c82333;
         }
 
+        .btn-merge {
+            background: #9c27b0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-merge:hover {
+            background: #7b1fa2;
+        }
+
         /* FOOTER */
         footer {
             text-align: center;
             padding: 20px;
-            background: #f8f9ff;
-            color: #666;
+            background: var(--footer-bg);
+            color: var(--text-color);
             font-size: 14px;
-            border-top: 1px solid #e0e5ff;
+            border-top: 1px solid var(--border-color);
+            opacity: 0.8;
         }
 
         /* FLASH MESSAGE */
@@ -631,6 +774,90 @@
             }
         }
 
+        /* IMPORT MODAL */
+        .import-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .import-modal-content {
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow);
+        }
+
+        .import-modal h3 {
+            color: #4a6ee0;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        body.dark-mode .import-modal h3 {
+            color: #8a63d2;
+        }
+
+        .import-preview {
+            background: var(--form-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .import-preview-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 0;
+        }
+
+        .import-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .import-options button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-append {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-replace {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-cancel-import {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-append:hover, .btn-replace:hover, .btn-cancel-import:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
         /* RESPONSIVE DESIGN */
         @media (max-width: 900px) {
             .main-content {
@@ -648,6 +875,11 @@
             
             .charts-container {
                 grid-template-columns: 1fr;
+            }
+            
+            .theme-toggle-container {
+                top: 10px;
+                right: 10px;
             }
         }
 
@@ -692,6 +924,10 @@
             .autocomplete-items {
                 max-height: 150px;
             }
+            
+            .import-options {
+                flex-direction: column;
+            }
         }
 
         /* CATEGORY COLORS */
@@ -703,17 +939,29 @@
         .category-healthcare { color: #dc3545; }
         .category-education { color: #20c997; }
         .category-other { color: #6c757d; }
+        body.dark-mode .category-other { color: #a0a0a0; }
 
         /* EMPTY STATE */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: #666;
+            color: var(--text-color);
+            opacity: 0.7;
             font-style: italic;
         }
     </style>
 </head>
 <body>
+    <!-- THEME TOGGLE -->
+    <div class="theme-toggle-container">
+        <span class="theme-toggle-label">🌙</span>
+        <label class="theme-toggle">
+            <input type="checkbox" id="themeToggle">
+            <span class="theme-slider"></span>
+        </label>
+        <span class="theme-toggle-label">☀️</span>
+    </div>
+
     <div class="container">
         <header>
             <h1>💰 Personal Expense Tracker</h1>
@@ -859,7 +1107,7 @@
         </div>
 
         <footer>
-            <p>© 2026 Fahad's Expense Tracker. All Rights Reserved.</p>
+            <p>© 2026 Fahad's Expense Tracker v2.0. All Rights Reserved.</p>
         </footer>
     </div>
 
@@ -903,6 +1151,29 @@
         const importFile = document.getElementById('importFile');
         const clearAllBtn = document.getElementById('clearAllBtn');
         const autocompleteList = document.getElementById('autocompleteList');
+        const themeToggle = document.getElementById('themeToggle');
+        
+        // ========== THEME TOGGLE FUNCTIONALITY ==========
+        
+        // Check for saved theme preference or default to light
+        const savedTheme = localStorage.getItem('expenseTrackerTheme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        // Theme toggle event listener
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('expenseTrackerTheme', 'dark');
+                showFlashMessage("🌙 Dark mode enabled", 'success');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('expenseTrackerTheme', 'light');
+                showFlashMessage("☀️ Light mode enabled", 'success');
+            }
+        });
         
         // Set today's date as default
         window.onload = function() {
@@ -1411,11 +1682,11 @@
             return colors[category] || 'linear-gradient(to top, #667eea, #764ba2)';
         }
         
-        // Update statistics and chart - FIXED VERSION
+        // Update statistics and chart
         function updateStatistics() {
             if (expenses.length === 0) {
                 // Clear statistics if no expenses
-                document.getElementById('categoryChart').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No data to display. Add expenses to see the chart.</p>';
+                document.getElementById('categoryChart').innerHTML = '<p style="text-align: center; color: var(--text-color); padding: 40px;">No data to display. Add expenses to see the chart.</p>';
                 document.getElementById('averageExpense').textContent = '0.00 PKR';
                 document.getElementById('highestExpense').textContent = '0.00 PKR';
                 document.getElementById('mostUsedCategory').textContent = 'None';
@@ -1463,41 +1734,31 @@
             document.getElementById('mostUsedCategory').textContent = mostUsedCategory;
             document.getElementById('monthlyTotal').textContent = `${monthlyTotal.toFixed(2)} PKR`;
             
-            // ========== CREATE BAR CHART ==========
+            // Create bar chart
             const categoryChart = document.getElementById('categoryChart');
-            categoryChart.innerHTML = ''; // Clear existing
+            categoryChart.innerHTML = '';
             
-            // Get the maximum amount for scaling
             const maxAmount = Math.max(...Object.values(categoryTotals));
+            const chartHeight = 200;
             
-            // Define chart height
-            const chartHeight = 200; // Height in pixels
-            
-            // Sort categories by amount (largest first)
             const sortedCategories = Object.entries(categoryTotals)
-                .sort((a, b) => b[1] - a[1]); // Sort descending by amount
+                .sort((a, b) => b[1] - a[1]);
             
-            // Calculate total for percentage
             const totalAllCategories = sortedCategories.reduce((sum, [_, amount]) => sum + amount, 0);
             
-            // Create bars for each category
             sortedCategories.forEach(([category, amount]) => {
-                // Calculate bar height (scaled to chart height)
                 const barHeight = maxAmount > 0 ? (amount / maxAmount) * chartHeight : 0;
                 const percentage = ((amount / totalAllCategories) * 100).toFixed(1);
                 
-                // Create bar wrapper
                 const barWrapper = document.createElement('div');
                 barWrapper.className = 'bar-wrapper';
                 
-                // Create the actual bar
                 const bar = document.createElement('div');
                 bar.className = 'bar';
                 bar.style.height = `${barHeight}px`;
                 bar.style.background = getCategoryColor(category);
                 bar.title = `${category}: ${amount.toFixed(2)} PKR (${percentage}%)`;
                 
-                // Add hover effect
                 bar.onmouseover = function() {
                     this.style.transform = 'scale(1.05)';
                     this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
@@ -1507,36 +1768,26 @@
                     this.style.boxShadow = 'none';
                 };
                 
-                // Create value label (above bar)
                 const valueLabel = document.createElement('div');
                 valueLabel.className = 'bar-value';
                 valueLabel.textContent = `${amount.toFixed(0)} PKR`;
                 valueLabel.title = `${category}: ${amount.toFixed(2)} PKR`;
                 
-                // Create category label (below bar)
                 const categoryLabel = document.createElement('div');
                 categoryLabel.className = 'bar-label';
                 categoryLabel.textContent = category;
                 
-                // Create percentage label
                 const percentageLabel = document.createElement('div');
                 percentageLabel.className = 'bar-percentage';
                 percentageLabel.textContent = `${percentage}%`;
                 
-                // Assemble the bar
                 barWrapper.appendChild(valueLabel);
                 barWrapper.appendChild(bar);
                 barWrapper.appendChild(categoryLabel);
                 barWrapper.appendChild(percentageLabel);
                 
-                // Add to chart
                 categoryChart.appendChild(barWrapper);
             });
-            
-            // If chart is still empty, show message
-            if (categoryChart.children.length === 0) {
-                categoryChart.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Add some expenses to see the chart!</p>';
-            }
         }
         
         // Cancel edit mode
@@ -1548,32 +1799,20 @@
         
         // Reset form to "Add Expense" mode
         function resetForm() {
-            // Clear editing ID
             editingExpenseId = null;
-            
-            // Reset button to "Add Expense"
             addBtn.textContent = "Add Expense";
             addBtn.className = "btn-primary";
-            
-            // Hide cancel button
             cancelBtn.style.display = 'none';
-            
-            // Clear form
             clearForm();
         }
 
         // Clear the form
         function clearForm() {
-            // Set today's date
             const today = new Date().toISOString().split('T')[0];
             dateInput.value = today;
-            
-            // Clear other fields
             categoryInput.value = '';
             amountInput.value = '';
             descInput.value = '';
-            
-            // Close autocomplete
             closeAutocompleteList();
         }
         
@@ -1587,7 +1826,7 @@
             });
         }
         
-        // ========== DATA MANAGEMENT FUNCTIONS ==========
+        // ========== IMPORT/EXPORT FUNCTIONS ==========
         
         // Export data as JSON
         function exportData() {
@@ -1604,7 +1843,7 @@
             showFlashMessage("📤 Data exported successfully!");
         }
         
-        // Handle file import
+        // Handle file import with APPEND/REPLACE options
         function handleFileImport(e) {
             const file = e.target.files[0];
             if (file) {
@@ -1612,22 +1851,131 @@
                 reader.onload = function(event) {
                     try {
                         const importedData = JSON.parse(event.target.result);
-                        if (confirm(`Import ${importedData.length} expenses? This will replace current data.`)) {
-                            expenses = importedData;
-                            updateDescriptionsList();
-                            updateTable();
-                            saveToLocalStorage();
-                            saveDescriptionsToStorage();
-                            showFlashMessage("📥 Data imported successfully!");
+                        
+                        if (!Array.isArray(importedData)) {
+                            showFlashMessage("❌ Invalid file format. Must be an array of expenses.", 'error');
+                            return;
                         }
+                        
+                        showImportModal(importedData);
+                        
                     } catch (error) {
                         showFlashMessage("❌ Invalid JSON file", 'error');
+                        console.error("Import error:", error);
                     }
                 };
                 reader.readAsText(file);
             }
-            // Reset file input
             importFile.value = '';
+        }
+        
+        // Show import modal with options
+        function showImportModal(importedData) {
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'import-modal';
+            modal.innerHTML = `
+                <div class="import-modal-content">
+                    <h3>📥 Import Options</h3>
+                    <p>Found <strong>${importedData.length}</strong> expenses in the file.</p>
+                    <p>You currently have <strong>${expenses.length}</strong> expenses.</p>
+                    
+                    <div class="import-preview">
+                        <p><strong>Sample of imported expenses:</strong></p>
+                        ${importedData.slice(0, 3).map(exp => `
+                            <div class="import-preview-item">
+                                <small>${exp.date} • ${exp.category} • ${exp.amount} PKR</small><br>
+                                <span>${exp.description}</span>
+                            </div>
+                        `).join('')}
+                        ${importedData.length > 3 ? `<p>...and ${importedData.length - 3} more</p>` : ''}
+                    </div>
+                    
+                    <div class="import-options">
+                        <button class="btn-append" id="appendBtn">Add (Append)</button>
+                        <button class="btn-replace" id="replaceBtn">Replace All</button>
+                        <button class="btn-cancel-import" id="cancelImportBtn">Cancel</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Event listeners
+            document.getElementById('appendBtn').addEventListener('click', function() {
+                appendData(importedData);
+                document.body.removeChild(modal);
+            });
+            
+            document.getElementById('replaceBtn').addEventListener('click', function() {
+                if (confirm(`⚠️ Are you sure you want to REPLACE ALL ${expenses.length} current expenses with ${importedData.length} new ones?`)) {
+                    replaceData(importedData);
+                    document.body.removeChild(modal);
+                }
+            });
+            
+            document.getElementById('cancelImportBtn').addEventListener('click', function() {
+                document.body.removeChild(modal);
+                showFlashMessage("Import canceled", 'warning');
+            });
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                    showFlashMessage("Import canceled", 'warning');
+                }
+            });
+        }
+        
+        // Append data (add to existing)
+        function appendData(importedData) {
+            const beforeCount = expenses.length;
+            
+            // Create a set of existing expense keys to avoid duplicates
+            const existingKeys = new Set();
+            expenses.forEach(exp => {
+                const key = `${exp.date}|${exp.category}|${exp.amount}|${exp.description}`;
+                existingKeys.add(key);
+            });
+            
+            // Filter out duplicates
+            const newExpenses = importedData.filter(impExp => {
+                const key = `${impExp.date}|${impExp.category}|${impExp.amount}|${impExp.description}`;
+                return !existingKeys.has(key);
+            });
+            
+            // Add new expenses with updated IDs
+            newExpenses.forEach(exp => {
+                expenses.push({
+                    ...exp,
+                    id: Date.now() + Math.random() // New unique ID
+                });
+            });
+            
+            const addedCount = newExpenses.length;
+            const duplicateCount = importedData.length - addedCount;
+            
+            updateDescriptionsList();
+            updateTable();
+            saveToLocalStorage();
+            saveDescriptionsToStorage();
+            
+            showFlashMessage(
+                `📥 Added ${addedCount} new expenses. ` +
+                (duplicateCount > 0 ? `Skipped ${duplicateCount} duplicates.` : ''),
+                'success'
+            );
+        }
+        
+        // Replace data (overwrite everything)
+        function replaceData(importedData) {
+            expenses = importedData;
+            updateDescriptionsList();
+            updateTable();
+            saveToLocalStorage();
+            saveDescriptionsToStorage();
+            showFlashMessage(`🔄 Replaced all expenses with ${importedData.length} new entries.`, 'success');
         }
         
         // Clear all data
@@ -1668,7 +2016,7 @@
                 }
             } catch (error) {
                 console.error("❌ Error loading from localStorage:", error);
-                expenses = []; // Reset to empty array on error
+                expenses = [];
                 showFlashMessage("Error loading saved data", 'error');
             }
         }
@@ -1683,7 +2031,9 @@
         
         // ========== INITIAL DEBUG INFO ==========
         console.log("🎯 Expense Tracker ready!");
-        console.log("✅ Autocomplete feature enabled - remembers ALL descriptions!");
+        console.log("✅ Autocomplete feature enabled!");
+        console.log("✅ Import Append/Replace feature enabled!");
+        console.log("✅ Dark/Light theme toggle enabled!");
     </script>
 </body>
 </html>
